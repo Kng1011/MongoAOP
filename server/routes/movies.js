@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Movie = require('../models/movie');
+const Movie = require('../models/Movie');
 const Comment = require('../models/Comment');
 
 // Get all movies with pagination
