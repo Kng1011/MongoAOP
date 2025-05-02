@@ -20,7 +20,7 @@ if (process.env.MONGODB_URI) {
 // CORS Configuration
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-app-name.onrender.com', 'http://your-app-name.onrender.com']
+    ? ['https://mflix-app.onrender.com', 'http://mflix-app.onrender.com']
     : 'http://localhost:3000',
   credentials: true,
   optionsSuccessStatus: 200
@@ -57,10 +57,13 @@ app.use('/api/comments', commentRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  const clientBuildPath = path.join(__dirname, '../client/build');
+  console.log('Serving static files from:', clientBuildPath);
+  
+  app.use(express.static(clientBuildPath));
   
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
 }
 
