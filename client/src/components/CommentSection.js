@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import './CommentSection.css';
 import API_URL from '../config';
 
@@ -12,18 +13,18 @@ const CommentSection = ({ movieId }) => {
   });
   const [editingComment, setEditingComment] = useState(null);
 
-  useEffect(() => {
-    fetchComments();
-  }, [movieId]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const response = await axios.get(`${API_URL}/comments/movie/${movieId}`);
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
     }
-  };
+  }, [movieId]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -59,10 +60,42 @@ const CommentSection = ({ movieId }) => {
 
   const handleDelete = async (commentId) => {
     try {
-      await axios.delete(`${API_URL}/comments/${commentId}`);
-      fetchComments();
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+        background: '#fff',
+        customClass: {
+          popup: 'animated fadeInDown'
+        }
+      });
+
+      if (result.isConfirmed) {
+        await axios.delete(`${API_URL}/comments/${commentId}`);
+        await Swal.fire({
+          title: 'Deleted!',
+          text: 'Your comment has been deleted.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+          background: '#fff'
+        });
+        fetchComments();
+      }
     } catch (error) {
       console.error('Error deleting comment:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to delete the comment.',
+        icon: 'error',
+        confirmButtonColor: '#dc3545',
+        background: '#fff'
+      });
     }
   };
 
