@@ -3,8 +3,9 @@ services:
     name: mflix-app
     env: node
     buildCommand: |
-      npm run install-all
-      cd client && npm run build
+      npm install
+      cd client && npm install && npm run build
+      cd ..
     startCommand: npm start
     envVars:
       - key: NODE_ENV
