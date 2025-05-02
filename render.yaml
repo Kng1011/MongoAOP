@@ -3,10 +3,15 @@ services:
     name: mflix-app
     env: node
     buildCommand: |
+      echo "Installing server dependencies..."
       npm install
+      echo "Installing client dependencies..."
       cd client
       npm install
+      echo "Building client..."
       npm run build
+      echo "Build completed. Contents of build directory:"
+      ls -la build
       cd ..
     startCommand: npm start
     envVars:
@@ -14,4 +19,6 @@ services:
         value: production
       - key: MONGODB_URI
         sync: false
+      - key: CI
+        value: false
     healthCheckPath: / 
