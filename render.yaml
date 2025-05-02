@@ -3,12 +3,15 @@ services:
     name: mflix-app
     env: node
     buildCommand: |
-      npm install --production
-      cd client && npm install && npm run build
+      npm install
+      cd client
+      npm install
+      npm run build
       cd ..
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        sync: false 
+        sync: false
+    healthCheckPath: / 

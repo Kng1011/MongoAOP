@@ -60,9 +60,14 @@ if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = path.join(__dirname, '../client/build');
   console.log('Serving static files from:', clientBuildPath);
   
+  // Serve static files from the React app
   app.use(express.static(clientBuildPath));
   
-  app.get('*', (req, res) => {
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+      return next();
+    }
     res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
 }
