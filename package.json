@@ -4,8 +4,8 @@
     "description": "MongoDB Movie Application",
     "main": "server/index.js",
     "scripts": {
-        "start": "node server/index.js",
-        "server": "nodemon server/index.js",
+        "start": "node --openssl-legacy-provider server/index.js",
+        "server": "nodemon --openssl-legacy-provider server/index.js",
         "client": "npm start --prefix client",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "install-all": "npm install && cd client && npm install",
